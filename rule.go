@@ -81,7 +81,7 @@ func (r *SecretsRule) Check(path string, content []byte) []Finding{
                     RuleID:   pat.Name,
                     Filename: path,
                     Severity: pat.Severity,
-                    Message:  fmt.Sprintf("A %s was found in JSON file: %s", pat.Name, path),
+                    Message:  fmt.Sprintf("A %s was found in file: %s", pat.Name, path),
                 })
             }
         }
