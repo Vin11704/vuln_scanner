@@ -1,8 +1,6 @@
-package tests
+package main
 
-// lesson learnt. cant have test files in different directory
 
-/*
 import (
 	"testing"
 )
@@ -226,4 +224,4 @@ func TestCheckFindingFields(t *testing.T) {
 		}
 	})
 }
-*/
+
