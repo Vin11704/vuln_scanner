@@ -3,7 +3,6 @@ import(
 	"regexp"
 )
 
-
 func NewSecretsRule() *SecretsRule{
 	return &SecretsRule{
 		Pattern: []secretPattern{

@@ -7,24 +7,7 @@ import (
 	"sync"
 )
 
-// // OLD: single rule, gi param rebuilt inside scan, os.Exit in scan
-// func scan(root string, scanDir string, rule Rule, gi *Gitignore, numworkers int) []Finding {
-// 	if !gi.CheckGitignore(root) {
-// 		os.Exit(0)
-// 	}
-// 	gi, err := NewGitignore(root)
-// 	if err != nil {
-// 		fmt.Fprintf(os.Stderr, "failed to read .gitignore: %v\n", err)
-// 		os.Exit(1)
-// 	}
-// 	...
-// }
-
-// scan walks scanDir, runs all rules against every file, and returns
-// findings that survive gitignore suppression.
-//
-// Caller is responsible for CheckGitignore / NewGitignore / os.Exit
-// — this function is a pure "do the work, return results" function.
+// this function is a pure "do the work, return results" function.
 func scan(scanDir string, rules []Rule, gi *Gitignore, numWorkers int) []Finding {
 	pathsChan := make(chan string)
 	findingsChan := make(chan Finding)
@@ -43,6 +26,9 @@ func scan(scanDir string, rules []Rule, gi *Gitignore, numWorkers int) []Finding
 				return nil
 			}
 			if d.IsDir() {
+				return nil
+			}
+			if shouldSkipFile(path) {
 				return nil
 			}
 			pathsChan <- path
@@ -82,30 +68,14 @@ func worker(paths <-chan string, findings chan<- Finding, rules []Rule, gi *Giti
 			hits := rule.Check(path, content)
 
 			for _, f := range hits {
-				if gi.Match(path) {
-					continue // suppress *reporting* only
-				}
+			// blocked as this prevents SAFE statement in main.go from executing  
+				// if gi.Match(path) {
+				// 	continue // suppress *reporting* only
+				// }
 				findings <- f
 			}
 		}
 	}
 }
 
-// // OLD worker: single rule, chan []Finding, all-or-nothing gitignore per file
-// func worker(paths <-chan string, results chan<- []Finding, rule Rule, gi *Gitignore, wg *sync.WaitGroup) {
-// 	defer wg.Done()
-// 	for path := range paths {
-// 		content, err := os.ReadFile(path)
-// 		if err != nil {
-// 			continue
-// 		}
-// 		findings := rule.Check(path, content)
-// 		if len(findings) == 0 {
-// 			continue
-// 		}
-// 		if gi.Match(path) {
-// 			continue
-// 		}
-// 		results <- findings
-// 	}
-// }
+
