@@ -9,16 +9,20 @@ import (
 const (
 	colorGreen = "\033[32m"
 	colorReset = "\033[0m"
+	colorBlue = "\033[34m"
+	colorRed = "\033[31m%s\033[0m"
+	colorYellow = "\033[33m%s\033[0m"
+	colorCyan = "\033[36m%s\033[0m"
 )
 
 func colorSeverity(sev string) string {
 	switch strings.ToLower(sev) {
 	case "critical", "high":
-		return fmt.Sprintf("\033[31m%s\033[0m", sev) // Red
+		return fmt.Sprintf(colorRed, sev) // Red
 	case "medium":
-		return fmt.Sprintf("\033[33m%s\033[0m", sev) // Yellow
+		return fmt.Sprintf(colorYellow, sev) // Yellow
 	case "low":
-		return fmt.Sprintf("\033[36m%s\033[0m", sev) // Cyan
+		return fmt.Sprintf(colorCyan, sev) // Cyan
 	default:
 		return sev
 	}
@@ -27,8 +31,8 @@ func colorSeverity(sev string) string {
 func main() {
 	fmt.Println("test Network Vulnerability Scanner")
 
-	root := "../<file_name>"
-	scanDir := "../<file_name>"
+	root := "../LLM_prompt_detector"
+	scanDir := "../LLM_prompt_detector"
 
 	if !CheckGitignore(root) {
 		fmt.Println("WARNING: no .gitignore found in", root)
@@ -58,7 +62,7 @@ func main() {
 		}
 
 		if isAllSafe{
-			fmt.Println(colorGreen + "SAFE " + colorReset + "-> All files are listed in .gitignore and will not be committed/leaked")
+			fmt.Println(colorBlue + "FINAL VERDICT:\n " + colorReset + colorGreen + "SAFE " + colorReset + "-> All files are listed in .gitignore and will not be committed/leaked")
 		}
 		
 	}

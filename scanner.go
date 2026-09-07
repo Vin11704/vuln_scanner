@@ -15,7 +15,8 @@ func scan(scanDir string, rules []Rule, gi *Gitignore, numWorkers int) []Finding
 
 	// Launch workers
 	wg.Add(numWorkers)
-	for i := 0; i < numWorkers; i++ {
+	// for i := 0; i < numWorkers; i++ {
+	for range numWorkers {
 		go worker(pathsChan, findingsChan, rules, gi, &wg)
 	}
 
@@ -68,7 +69,7 @@ func worker(paths <-chan string, findings chan<- Finding, rules []Rule, gi *Giti
 			hits := rule.Check(path, content)
 
 			for _, f := range hits {
-			// blocked as this prevents SAFE statement in main.go from executing  
+				// blocked as this prevents SAFE statement in main.go from executing
 				// if gi.Match(path) {
 				// 	continue // suppress *reporting* only
 				// }
@@ -77,5 +78,3 @@ func worker(paths <-chan string, findings chan<- Finding, rules []Rule, gi *Giti
 		}
 	}
 }
-
-
