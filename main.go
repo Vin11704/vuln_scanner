@@ -46,8 +46,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	rules := []Rule{NewSecretsRule()}
-	findings := scan(scanDir, rules, gi, 1)
+	rules := []Rule{
+					NewSecretsRule(),
+					// NewUnpinnedActionsRule(),
+				}
+	findings := scan(scanDir, rules, gi, 2)
 
 	if len(findings) == 0{
 		fmt.Println("No vulnerabilities found.")

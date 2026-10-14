@@ -23,6 +23,8 @@ type Rule interface {
 	Check(path string, content []byte) []Finding
 }
 
+// ------------------------------------------------------------------
+// general secrets rule here
 type SecretsRule struct {
 	Pattern []secretPattern
 }

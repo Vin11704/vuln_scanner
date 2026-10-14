@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
+	"fmt"
 )
 
 // this function is a pure "do the work, return results" function.
@@ -62,16 +63,20 @@ func worker(paths <-chan string, findings chan<- Finding, rules []Rule, gi *Giti
 	for path := range paths {
 		content, err := os.ReadFile(path)
 		if err != nil {
+			fmt.Fprintf(os.Stderr, "warning: cannot read %s: %v\n", path, err)
 			continue
 		}
 
 		for _, rule := range rules {
+			if !rule.AppliesTo(path) {
+				continue
+			}	
 			hits := rule.Check(path, content)
 
 			for _, f := range hits {
 				// blocked as this prevents SAFE statement in main.go from executing
 				// if gi.Match(path) {
-				// 	continue // suppress *reporting* only
+				// 	continue // suppress 'reporting' only
 				// }
 				findings <- f
 			}

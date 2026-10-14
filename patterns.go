@@ -14,3 +14,10 @@ func NewSecretsRule() *SecretsRule{
         },
 	}
 }
+
+func NewUnpinnedActionsRule() *UnpinnedActionsRule{
+    return &UnpinnedActionsRule{
+        usesRegex: regexp.MustCompile(`uses:\s*([\w.-]+/[\w./-]+)@(\S+)`),
+        shaRegex: regexp.MustCompile(`^[0-9a-f]{40}$`),
+    }
+}
